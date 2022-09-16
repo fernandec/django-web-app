@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+
+<html lang="fr">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Photo en grand</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'listings/styles.css' %}" />
+</head>
+<body>
+	<div class="detail">
+                {% static "" as baseUrl %}
+		<img src="{{ baseUrl }}listings{{ photo.Path }}/{{ photo.FileName }}" title='{{photo.Path}}/{{ photo.FileName }}'>
+
+	</div>
+{% if fin is not None %}
+<nav>
+	<div class="lien">
+		<a href="{{fin }}" target= _blank>Localisation</a>
+	</div>
+</nav>
+
+{% endif %}
+
+</body>
+
+</html>

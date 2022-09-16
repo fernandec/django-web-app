@@ -1,0 +1,65 @@
+<!DOCTYPE html> 
+<html lang="fr"> 
+
+<head>
+	<meta charset="UTF-8"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Galerie admin</title> 
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'listings/styles.css' %}" />
+</head> 
+
+<body>
+<h1>Administration de la Galerie</h1>
+
+
+<!-- ---  navigation --- -->
+<ul class = "navi">
+	        <li class = "navi"><a href="{% url 'gallery_next' %}">Photos suivantes           </a></li>
+		<li class = "navi"><a href="{% url 'gallery-year' %}">Choisir une année          </a></li>
+		<li class = "navi"><a href="{% url 'gallery-admin' %}">Administration Galerie</a></li>
+</ul>
+
+
+
+
+<h2> Recréer la base de donnée</h2>
+<p>
+Cette commande permets de regénérer toute la base donnée de Django: flush des données et re-création des objets à partir du contenu des répertoires /var/www/Mes-images. Pour lancer cette opération 192.168.0.51/gallery/create</p>
+
+<h2>Migrer les photo du téléphone de Marie dans la base de données</h2>
+<a class=lien href="{% url 'migrate-tel-marie' %}">migrer les photos du tel de Marie</a>
+{% if done == 1 %}
+<p> Les photos ont été migrées </p>
+
+{% endif %}
+
+<p>
+Cette commande permet de migrer les données du téléphone de Marie (tel-Marie) dans le répertoire /var/www/Mes-images
+Les photos ne sont migrées qu'une fois (= si on supprime des photo dans /var/ww/mes_images elle ne seront pas migrées une nouvelle fois.
+(le fichier qui garde mémoire des migrations est  'pkl_file' (non lisible) . )
+</p>
+
+<h2>Migrer les photo du téléphone de Bruno dans la base de données</h2>
+
+<a class=lien href="{% url 'migrate-tel-bruno' %}">migrer les photos du tel de bruno</a>
+{% if done == 2 %}
+<p> Les photos ont été migrées </p>
+
+{% endif %}
+<p>
+Cette commande permet de migrer les données du téléphone de Bruno (tel-Bruno) dans le répertoire /var/www/Mes-images
+Les photos ne sont migrées qu'une fois (= si on supprime des photo dans /var/ww/mes_images elle ne seront pas migrées une nouvelle fois. 
+(le fichier qui garde mémoire des migrations est  'pkl_file' (non lisible) . )
+</p>
+
+<h2> Effectuer un Audit de la base de données</h2>
+<p>
+Cette commande va vérifier si chaque objet 'photo' a bien un fichier photo dans '/Mes-images' et s'il a bien une miniature dans 'Mes-images_min'. S'il n'y a pas de phot dans Mes-images l'objet est supprimé de la base de donnée. Si la miniature est manquante elle est recré.
+</p>
+<a class=lien href="{% url 'audit' %}">Effectuer un audit de la base de donnée</a> 
+{% if done == 2 %}
+<p> {{resultat}} </p>
+{% endif %}
+
+</body>

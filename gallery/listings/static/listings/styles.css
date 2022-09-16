@@ -1,0 +1,134 @@
+*, ::before, ::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #333;
+    height: 100vh;
+}
+
+h1 {
+    color: #f1f1f1;
+    text-align: center;
+    font-size: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 50px;
+}
+
+.gallery {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%; /*80% */
+    max-width: 1300px;
+    margin: 70px auto 0;
+    /* background: crimson; */
+}
+.item {
+    width: 300px;
+    height: 200px;
+    margin: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.item img {
+    width: 100%;
+    height: auto;
+}
+
+.detail {
+	height: 100vh;
+}
+
+.detail img {
+	width: auto;
+	height: 100%;
+	display: block; /*permet de centrer l'image*/
+	margin: 0px auto;
+}
+
+nav {
+    display:block;
+    text-align: center;
+    }
+
+.lien {
+	margin: 10px;
+	color: #f4e50b;
+}
+.lien a{
+    font-size: 20px;
+    color: #f1f1f1;
+    font-family: Arial, Helvetica, sans-serif;
+ 
+}
+
+/*---------------*/
+
+ul.navi {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(22, 102, 9);
+}
+
+li.navi{
+    float: left;
+} 
+
+li.navi a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+    background-color: #111;
+}
+
+
+/*---------------*/
+
+
+
+
+h2 {
+    color: #f1f1f1;
+    text-align: left;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 50px;
+    text-decoration: underline;
+
+}
+p {
+    width: 50%;
+    color: #f1f1f1;
+    text-align: left-side;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 5px;
+    font-style: italic;
+
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 7fr 4fr;
+}
+
+.map {
+    height: 100vh;
+    background-color: #cccccc;
+    position: sticky !important;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 100vh;
+}
