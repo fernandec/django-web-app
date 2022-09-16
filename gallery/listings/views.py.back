@@ -1,0 +1,142 @@
+from django.shortcuts import render
+from listings.models import Photo 
+from listings.models import Repertoire
+from listings.forms import YearForm
+# Create your views here.
+
+# my functions -------
+from PIL import Image
+from PIL.ExifTags import TAGS
+from os import walk
+
+def get_exif(fn, photo):
+    ret = {}
+    try:
+        i = Image.open(fn)
+        info = i._getexif()
+    except:
+        with open ('/home/bf/log_err.log','a') as log:
+            log.write(fn + '          fichier non lisible\n') 
+        return False
+
+    if info is None:
+        with open ('/home/bf/log_info.log','a') as log:
+            log.write(fn + '          pas de données EXIF\n')
+        return False
+
+    for tag, value in info.items():
+        decoded = TAGS.get(tag, 'void')
+        if hasattr(Photo, decoded):                             # on ne mémorise que les data qui sont dans la clesse Photo
+            if type(value) == str and decoded[:4] == "Date" :   # changement du format de la date
+                value = value[:10].replace(':', '-') + value[10:]
+                if value[:4] != '0000':                         # format de date valide ?
+                    setattr(photo, decoded, value)
+            else :
+                setattr(photo,decoded, value)
+            ret[decoded] = value
+    if 'GPSInfo' in ret and 29 in ret['GPSInfo']:
+        photo.DateGPS = ret['GPSInfo'][29].replace(':', '-')
+    else:
+        with open ('/home/bf/log_info-gps.log','a') as log:
+            log.write(fn + '          pas de données GPS\n')
+    return ret
+# --------------------
+def db_create(request):
+    import os
+
+    # purge de la base
+    print("purge de la base")
+    Photo.objects.all().delete()
+    Repertoire.objects.all().delete()
+
+    im_root = '/var/www/Mes-images'
+
+    file_list =[]
+    for tup in walk(im_root):   # tup = ( repertoire, [sous-repertoires], [fichiers] )
+        rep = tup[0]
+        if rep[-1] == '/':   # on enleve le dernier '/' s'il y en a un
+            rep = rep[:-1]
+
+        # Traitement des répertoires
+        repertoire= Repertoire()
+        repertoire.Path = rep
+        repertoire.Name= rep[ rep.rfind('/'):] # on tronque le path pour ne garder que le nom du repertoire
+        if rep != im_root:
+            print('________', Repertoire.objects.all()[0].Path)
+            repertoire.Parent_directory = Repertoire.objects.get(Path=rep[:rep.rfind('/')])
+        repertoire.save(force_insert=True)
+
+        # Traitement des images
+        for file in  tup[2]:
+            photo = Photo()
+            if os.path.splitext(file)[1].lower() == '.jpg': 
+                exif_data = get_exif(rep + "/" + file, photo )
+                photo.Path = rep
+                photo.FileName = file
+                #photo.repertoire= Repertoire.objects.get(Path=rep)
+                photo.repertoire= repertoire
+                photo.save(force_insert=True)
+            elif  os.path.splitext(file)[1].lower() != '.db' and  os.path.splitext(file)[1].lower() != '.exe':
+                 with open ('/home/bf/log_videos.log','a') as log:
+                     log.write(rep + "/"  + file + '\n')
+
+    photos = Photo.objects.all()
+
+    return render(request,
+            'listings/create.html',
+            {'photos': photos })
+
+
+def gallery(request):
+    #photos = Photo.objects.all()
+    request.session['step'] =  48
+    request.session['nb'] = 48 
+    photos = Photo.objects.order_by('Path')[: request.session.get('step')]
+    return render(request,
+            'listings/show_gallery.html',
+            {'photos': photos })
+
+def gallery_next(request):
+    #photos = Photo.objects.all()
+    i = request.session.get('nb')
+    nb = i + request.session.get('step')
+    if nb > len(Photo.objects.all()):
+        nb = Photo.objects.all()
+    
+    request.session['nb'] = nb
+    photos = Photo.objects.order_by('Path')[i:nb]
+    return render(request,
+            'listings/show_gallery_next.html',
+            {'photos': photos })
+
+def gallery_detail(request,id):
+
+    photo = Photo.objects.get(id=id)
+    return render(request,
+            'listings/gallery_detail.html',
+            {'photo': photo })
+
+def gallery_year(request):
+
+    if request.method == 'POST':
+
+        form = YearForm(request.POST)
+        if form.is_valid():
+            # on recherche dans la base quel est le rangde la première image de l'année concernée
+            photos = Photo.objects.order_by('Path')
+            for index, photo in enumerate( photos):
+                if photo.Path[20:24] == str(form.cleaned_data['year']):
+                    request.session['nb'] = index + request.session['step']
+                    photos = Photo.objects.order_by('Path')[index : index + request.session['step'] ]
+                    return render(request,
+                        'listings/show_gallery.html',
+                        {'photos':photos})
+    else:
+        form = YearForm()
+    return render(request,
+            'listings/year.html',
+            {'form':form})
+
+def gallery_loc(request):
+
+

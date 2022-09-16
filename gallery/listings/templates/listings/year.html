@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Choix de l'année</title>
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'listings/styles.css' %}" />
+</head>
+
+
+<body>
+
+<p>Entrez l'année de début de la galerie (exemple '2006' ) </p>
+
+<form action="" method="post" novalidate>
+{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Envoyer">
+</form>
+
+</body>
+</html>

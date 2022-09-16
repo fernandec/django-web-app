@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Galerie responsive flexbox</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin=""/>
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'listings/styles.css' %}" />
+	<link rel="stylesheet" href="{% static 'listings/style_leaflet.css' %}" />
+</head>
+
+
+<body>
+	<h1>Galerie photos</h1>
+
+<!-- ---  navigation --- -->
+<ul class = "navi">
+	<li class = "navi"><a href="{% url 'gallery-previous' %}">Photos précédentes           </a></li>
+	<li class = "navi"><a href="{% url 'gallery_next' %}">Photos suivantes           </a></li>
+	<li class = "navi"><a href="{% url 'gallery-year' %}">Choisir une année          </a></li>
+	<li class = "navi"><a href="{% url 'gallery-admin' %}">Administration Galerie</a></li>
+</ul>
+
+
+
+
+	<div class="container">
+
+		<div class="gallery">
+		
+			{% static "" as baseUrl %}
+			{% for photo in photos %}
+		 
+			<div class="item js-marker" data-lat="{{photo.GPSLat}}" data-lng="{{photo.GPSLon}}" data-price="{{photo.FileName}}" >
+
+
+				<a href="{% url 'gallery-detail' photo.id %}" target= _blank>
+					<img src="{{ baseUrl }}listings{{ photo.Path }}/{{ photo.FileName }}" title='{{ photo.Path }}/{{ photo.FileName }}'>
+				</a>
+
+			 </div>
+			{% endfor %}
+		 
+		</div>
+		<div class="map" id="map"></div>
+	</div>
+
+
+
+<!-- ---  navigation --- --> 
+<ul class = "navi">
+	<li class = "navi"><a href="{% url 'gallery_next' %}">Photos suivantes           </a></li>
+	<li class = "navi"><a href="{% url 'gallery-previous' %}">Photos precedentes           </a></li>
+        <li class = "navi"><a href="{% url 'gallery-year' %}">Choisir une année</a></li> 
+</ul>
+
+        <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+        integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+        crossorigin=""></script>
+	<script src="{% static 'listings/vendor.js' %}"></script>
+	<script src="{% static 'listings/app.js' %}"></script>
+</body>
+</html>
