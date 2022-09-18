@@ -1,28 +1,10 @@
-<!DOCTYPE html> 
-<html lang="fr"> 
+{% extends "listings/base.html" %}
 
-<head>
-	<meta charset="UTF-8"> 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Galerie admin</title> 
-	{% load static %}
-	<link rel="stylesheet" href="{% static 'listings/styles.css' %}" />
-</head> 
-
-<body>
-<h1>Administration de la Galerie</h1>
-
-
-<!-- ---  navigation --- -->
-<ul class = "navi">
-	        <li class = "navi"><a href="{% url 'gallery_next' %}">Photos suivantes           </a></li>
-		<li class = "navi"><a href="{% url 'gallery-year' %}">Choisir une année          </a></li>
-		<li class = "navi"><a href="{% url 'gallery-admin' %}">Administration Galerie</a></li>
-</ul>
+{% block titre_page %} <h1>Administration de la Galerie</h1>{% endblock %}
 
 
 
-
+{% block content %}
 <h2> Recréer la base de donnée</h2>
 <p>
 Cette commande permets de regénérer toute la base donnée de Django: flush des données et re-création des objets à partir du contenu des répertoires /var/www/Mes-images. Pour lancer cette opération 192.168.0.51/gallery/create</p>
@@ -62,4 +44,4 @@ Cette commande va vérifier si chaque objet 'photo' a bien un fichier photo dans
 <p> {{resultat}} </p>
 {% endif %}
 
-</body>
+{% endblock %}

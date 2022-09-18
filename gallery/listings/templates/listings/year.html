@@ -1,19 +1,10 @@
-<!DOCTYPE html>
+{% extends "listings/base.html" %}
+
+{% block titre_page %} <h1>Choisir une année</h1>{% endblock %}
 
 
-<html lang="fr">
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Choix de l'année</title>
-	{% load static %}
-	<link rel="stylesheet" href="{% static 'listings/styles.css' %}" />
-</head>
-
-
-<body>
-
+{% block content %}
 <p>Entrez l'année de début de la galerie (exemple '2006' ) </p>
 
 <form action="" method="post" novalidate>
@@ -21,6 +12,6 @@
 {{ form.as_p }}
 <input type="submit" value="Envoyer">
 </form>
+{% endblock %}
 
-</body>
-</html>
+
